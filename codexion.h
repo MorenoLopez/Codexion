@@ -6,7 +6,7 @@
 /*   By: horarivo <horarivo@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/27 22:33:55 by horarivo          #+#    #+#             */
-/*   Updated: 2026/09/06 08:42:04 by horarivo         ###   ########.fr       */
+/*   Updated: 2026/09/06 09:42:25 by horarivo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,6 @@ long long	compute_key(t_coder *coder);
 int			dongle_available(t_dongle *d, t_data *data);
 int			get_stop(t_data *data);
 
-int	has_priority(t_wait_node a, t_wait_node b);
+int			has_priority(t_wait_node a, t_wait_node b);
 
 #endif
