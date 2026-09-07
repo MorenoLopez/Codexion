@@ -6,7 +6,7 @@
 /*   By: horarivo <horarivo@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/27 22:33:47 by horarivo          #+#    #+#             */
-/*   Updated: 2026/09/06 09:42:04 by horarivo         ###   ########.fr       */
+/*   Updated: 2026/09/07 10:18:25 by horarivo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,19 +22,16 @@ int	main(int argc, char **argv)
 		fprintf(stderr, "Invalid arguments\n");
 		return (1);
 	}
-	if (atoi(argv[1]) == 1)
-	{
-		printf("Coder 1 burn out !\n");
-		return (0);
-	}
 	data.params = &arguments;
 	if (init_data(&data) != 0)
 	{
 		fprintf(stderr, "init_data failed\n");
 		return (1);
 	}
-	printf("\n");
-	start_simulation(&data);
+	if (atoi(argv[1]) == 1)
+		log_state(&data, data.coders[0].id_coder, "burned out");
+	else
+		start_simulation(&data);
 	printf("\n");
 	cleanup(&data);
 	return (0);
