@@ -6,7 +6,7 @@
 /*   By: horarivo <horarivo@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/27 22:33:55 by horarivo          #+#    #+#             */
-/*   Updated: 2026/09/06 09:42:25 by horarivo         ###   ########.fr       */
+/*   Updated: 2026/09/11 19:36:12 by horarivo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 # include <stdlib.h>
 # include <string.h>
 # include <sys/time.h>
-# include <time.h>
 
 typedef struct s_data		t_data;
 typedef struct s_dongle		t_dongle;
