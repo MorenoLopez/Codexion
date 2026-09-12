@@ -6,7 +6,7 @@
 /*   By: horarivo <horarivo@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/27 22:33:47 by horarivo          #+#    #+#             */
-/*   Updated: 2026/09/11 19:38:42 by horarivo         ###   ########.fr       */
+/*   Updated: 2026/09/12 23:34:53 by horarivo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,7 @@ int	main(int argc, char **argv)
 		fprintf(stderr, "init_data failed\n");
 		return (1);
 	}
-	if (arguments.number_of_coders == 1)
-		log_state(&data, data.coders[0].id_coder, "burned out");
-	else
-		start_simulation(&data);
+	start_simulation(&data);
 	printf("\n");
 	cleanup(&data);
 	return (0);
