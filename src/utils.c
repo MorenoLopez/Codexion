@@ -6,7 +6,7 @@
 /*   By: horarivo <horarivo@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/09/01 10:09:27 by horarivo          #+#    #+#             */
-/*   Updated: 2026/09/12 23:03:01 by horarivo         ###   ########.fr       */
+/*   Updated: 2026/09/12 23:36:20 by horarivo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ int	dongle_available(t_dongle *d, t_data *data)
 }
 
 int	has_priority(t_wait_node a, t_wait_node b)
-
 {
 	if (a.key != b.key)
 		return (a.key < b.key);
