@@ -6,7 +6,7 @@
 /*   By: horarivo <horarivo@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/30 11:12:54 by horarivo          #+#    #+#             */
-/*   Updated: 2026/09/03 09:07:40 by horarivo         ###   ########.fr       */
+/*   Updated: 2026/09/12 23:37:52 by horarivo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int	do_compile(t_coder *coder)
 {
 	if (!acquire_dongles(coder))
 		return (0);
+	coder->state = COMPILING;
 	log_state(coder->data, coder->id_coder, "is compiling");
 	pthread_mutex_lock(&coder->data->state_mutex);
 	coder->last_compile_start = get_time_ms();
