@@ -8,10 +8,10 @@ Codexion is a concurrency simulation inspired by the classic "dining philosopher
 
 Each coder repeatedly cycles through four phases:
 
-- **Acquiring dongles** — waiting for both neighboring dongles to become available.
-- **Compiling** — holding both dongles for `time_to_compile` milliseconds.
-- **Debugging** — a fixed idle phase of `time_to_debug` milliseconds.
-- **Refactoring** — a fixed idle phase of `time_to_refactor` milliseconds, after which the coder immediately tries to compile again.
+- **Acquiring dongles** - waiting for both neighboring dongles to become available.
+- **Compiling** - holding both dongles for `time_to_compile` milliseconds.
+- **Debugging** - a fixed idle phase of `time_to_debug` milliseconds.
+- **Refactoring** - a fixed idle phase of `time_to_refactor` milliseconds, after which the coder immediately tries to compile again.
 
 If a coder fails to start a new compile within `time_to_burnout` milliseconds since the beginning of the simulation or since their last compile started, they burn out and the simulation stops. The simulation also stops successfully once every coder has completed at least `number_of_compiles_required` compiles.
 
@@ -85,19 +85,19 @@ Meaning: at 203 ms since the start of the simulation, coder 2 changed state to "
 ## Thread synchronization mechanisms
 
 - **`pthread_mutex_t` per dongle** protects that dongle's state (`is_taken`, `last_release`) and its wait queue, so no two coders can simultaneously believe they have acquired the same dongle.
-- **`pthread_cond_t` per dongle**, used with `pthread_cond_timedwait` rather than a plain `pthread_cond_wait`. A short timeout (5 ms) is used so that a waiting coder periodically re-checks the cooldown condition even if no `broadcast` occurs in the meantime — a plain `cond_wait` would risk a coder sleeping forever if the cooldown expires without any dongle activity to wake it. `release_dongle` calls `pthread_cond_broadcast` so that every coder currently waiting on that dongle re-evaluates whether it is now their turn.
+- **`pthread_cond_t` per dongle**, used with `pthread_cond_timedwait` rather than a plain `pthread_cond_wait`. A short timeout (5 ms) is used so that a waiting coder periodically re-checks the cooldown condition even if no `broadcast` occurs in the meantime - a plain `cond_wait` would risk a coder sleeping forever if the cooldown expires without any dongle activity to wake it. `release_dongle` calls `pthread_cond_broadcast` so that every coder currently waiting on that dongle re-evaluates whether it is now their turn.
 - **A dedicated `state_mutex`** protects fields that are read and written across threads outside of the dongle logic itself: the global `stop` flag, and each coder's `last_compile_start` / `compiles_done`. This is kept separate from the logging mutex, since the two protect unrelated pieces of state and mixing them would make the locking harder to reason about.
 - **A dedicated `log_mutex`** protects only the shared standard output stream.
 - **A binary min-heap per dongle** acts as the actual priority queue backing both `fifo` and `edf` scheduling: `heap_push` inserts a waiting coder with its priority key, `heap_peek` lets a waiting coder check (without removing anything) whether it is currently first in line, `heap_pop` removes the coder that is about to acquire the dongle, and `heap_remove` allows a coder to withdraw its own entry if the simulation stops while it was still waiting.
 
-Race conditions are avoided by never reading or writing any of the fields above outside of their associated mutex, and by re-checking all wait conditions (dongle availability, cooldown, heap priority, `stop`) inside a `while` loop around `pthread_cond_timedwait` rather than assuming a single wake-up means the condition is met — protecting against both spurious wake-ups and cases where several coders are woken by the same broadcast but only one of them should actually proceed.
+Race conditions are avoided by never reading or writing any of the fields above outside of their associated mutex, and by re-checking all wait conditions (dongle availability, cooldown, heap priority, `stop`) inside a `while` loop around `pthread_cond_timedwait` rather than assuming a single wake-up means the condition is met - protecting against both spurious wake-ups and cases where several coders are woken by the same broadcast but only one of them should actually proceed.
 
 Thread-safe communication between the coder threads and the monitor thread happens exclusively through this shared, mutex-protected state (`stop`, `last_compile_start`, `compiles_done`): the monitor thread never signals coders directly, it only sets `stop` and broadcasts every dongle's condition variable, letting each coder thread notice the change on its own next wake-up or condition check.
 
 
 ## Resources
 
-- [POSIX Threads Programming (LLNL Tutorial)](https://hpc-tutorials.llnl.gov/posix/) — general reference on `pthread_create`, `pthread_join`, mutexes and condition variables.
+- [POSIX Threads Programming (LLNL Tutorial)](https://hpc-tutorials.llnl.gov/posix/) - general reference on `pthread_create`, `pthread_join`, mutexes and condition variables.
 - The [Linux man pages](https://linux.die.net/man/) for `pthread_mutex_init`, `pthread_cond_wait`, `pthread_cond_timedwait`, `clock_gettime`, `gettimeofday`.
 - The [classic "Dining Philosophers" problem (Dijkstra, 1965)](https://en.wikipedia.org/wiki/Dining_philosophers_problem) as conceptual background for the deadlock and starvation issues addressed here.
 - [Coffman's conditions for deadlock](https://faq.computersciencewiki.org/index.php/home/article/coffman-conditions) (mutual exclusion, hold and wait, no preemption, circular wait), used as a checklist while designing the acquisition order.
